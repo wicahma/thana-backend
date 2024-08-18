@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      skpd: {
+      skpd_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "skpds",
@@ -23,7 +23,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      kecamatan: {
+      kecamatan_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "kecamatans",

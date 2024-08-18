@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
   class Kecamatan extends Model {
     static associate(models) {
       this.hasMany(models.asset, {
-        foreignKey: "kecamatan",
+        foreignKey: "kecamatan_id",
         sourceKey: "id",
       });
       models.asset.belongsTo(this, {
-        foreignKey: "kecamatan",
+        foreignKey: "kecamatan_id",
         sourceKey: "id",
       });
     }
