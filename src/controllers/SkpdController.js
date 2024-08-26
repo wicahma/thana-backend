@@ -1,13 +1,16 @@
 const httpStatus = require("http-status");
+const SkpdService = require("../service/SkpdService");
 
 class SkpdController {
-  constructor() {}
+  constructor() {
+    this.skpdService = new SkpdService();
+  }
 
   create = async (req, res) => {
     try {
       const { body } = req;
-      const data = await this.skpdService.create(body);
-      return res.status(httpStatus.CREATED).json(data);
+      const newSkpd = await this.skpdService.create(body);
+      return res.status(newSkpd.statusCode).send(newSkpd.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
@@ -16,8 +19,9 @@ class SkpdController {
   update = async (req, res) => {
     try {
       const { body } = req;
-      const data = await this.skpdService.update(body);
-      return res.status(httpStatus.OK).json(data);
+      const { id } = req.params;
+      const updatedSkpd = await this.skpdService.update(body, id);
+      return res.status(updatedSkpd.statusCode).send(updatedSkpd.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
@@ -25,9 +29,8 @@ class SkpdController {
 
   delete = async (req, res) => {
     try {
-      const { body } = req;
-      const data = await this.skpdService.delete(body);
-      return res.status(httpStatus.OK).json(data);
+      const deletedSkpd = await this.skpdService.delete(req.params.id);
+      return res.status(deletedSkpd.statusCode).send(deletedSkpd.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
@@ -35,8 +38,8 @@ class SkpdController {
 
   list = async (req, res) => {
     try {
-      const data = await this.skpdService.list();
-      return res.status(httpStatus.OK).json(data);
+      const allSkpd = await this.skpdService.list();
+      return res.status(allSkpd.statusCode).send(allSkpd.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }

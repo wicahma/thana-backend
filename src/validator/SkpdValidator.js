@@ -27,6 +27,11 @@ class SkpdValidator {
   }
 
   async validateUpdate(req, res, next) {
+    const options = {
+      abortEarly: false,
+      allowUnknown: false,
+      stripUnknown: true,
+    };
     const schema = Joi.object({
       nama: Joi.string().required(),
     });
