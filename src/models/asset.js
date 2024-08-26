@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       legalitas: DataTypes.ENUM("Sertifikat", "Non Sertifikat"),
       tanggal_legalitas: DataTypes.DATE,
       nomor_legalitas: DataTypes.STRING,
-      penggunaan: DataTypes.STRING,
       asal_usul: DataTypes.ENUM(
         "Beli",
         "Hibah",
@@ -58,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         "Data Awal belum sesuai kondisi Riil"
       ),
       pemanfaatan: DataTypes.BOOLEAN,
-      keterangan: DataTypes.STRING,
+      keterangan_lainnya: DataTypes.STRING,
       pdf_legalitas: DataTypes.STRING,
       foto_1: DataTypes.STRING,
       foto_2: DataTypes.STRING,
@@ -67,7 +66,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "asset",
-      underscored: true,
     }
   );
   return Asset;

@@ -62,9 +62,6 @@ module.exports = {
       nomor_legalitas: {
         type: Sequelize.STRING,
       },
-      penggunaan: {
-        type: Sequelize.STRING,
-      },
       asal_usul: {
         type: Sequelize.ENUM(
           "Beli",
@@ -116,7 +113,7 @@ module.exports = {
       pemanfaatan: {
         type: Sequelize.BOOLEAN,
       },
-      keterangan: {
+      keterangan_lainnya: {
         type: Sequelize.STRING,
       },
       pdf_legalitas: {
