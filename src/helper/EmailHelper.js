@@ -31,7 +31,7 @@ class EmailHelper {
             return !!(await client.messages.create(domain, postData));
         } catch (err) {
             console.log(err);
-            logger.error(err);
+            // logger.error(err);
             return false;
         }
     }
@@ -58,7 +58,7 @@ class EmailHelper {
 
             return !!(await client.messages.create(domain, postData));
         } catch (err) {
-            logger.error(err);
+            // logger.error(err);
             return false;
         }
     }

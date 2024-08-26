@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "skpd",
-      underscored: true,
     }
   );
   return Skpd;

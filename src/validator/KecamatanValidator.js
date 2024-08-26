@@ -3,9 +3,9 @@ const httpStatus = require("http-status");
 const ApiError = require("../helper/ApiError");
 
 class KecamatanValidator {
-  async validateCreate(req, res) {
+  async validateCreate(req, res, next) {
     const schema = Joi.object({
-      name: Joi.string().required(),
+      nama: Joi.string().required(),
     });
 
     const options = {
@@ -29,9 +29,9 @@ class KecamatanValidator {
     }
   }
 
-  async validateUpdate(req, res) {
+  async validateUpdate(req, res, next) {
     const schema = Joi.object({
-      name: Joi.string().required(),
+      nama: Joi.string().required(),
     });
 
     const params = Joi.object({
@@ -62,7 +62,7 @@ class KecamatanValidator {
               return details.message;
             })
             .join(", ");
-      next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
+      return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
     } else {
       req.body = value;
       req.params = valueParams;
@@ -70,7 +70,7 @@ class KecamatanValidator {
     }
   }
 
-  async validateDelete(req, res) {
+  async validateDelete(req, res, next) {
     const schema = Joi.object({
       id: Joi.number().required(),
     });
@@ -89,7 +89,7 @@ class KecamatanValidator {
           return details.message;
         })
         .join(", ");
-      next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
+      return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
     } else {
       req.params = value;
       return next();

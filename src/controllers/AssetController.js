@@ -1,57 +1,77 @@
 const httpStatus = require("http-status");
+const AssetService = require("../service/AssetService");
 
 class AssetController {
-  constructor() {}
+  constructor() {
+    this.assetService = new AssetService();
+  }
 
-  async create(req, res) {
+  create = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Asset created",
-      });
+      if (req.user.type === "admin" && req.body.pdf_legalitas) {
+        return res
+          .status(httpStatus.UNAUTHORIZED)
+          .send("Admin tidak boleh mengupload pdf legalitas!");
+      }
+      const asset = await this.assetService.createAsset(req.body);
+      res.status(asset.statusCode).send(asset.response);
+    } catch (e) {
+      console.log(e);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
+  update = async (req, res) => {
+    try {
+      if (req.user.type === "admin" && req.body.pdf_legalitas) {
+        return res
+          .status(httpStatus.UNAUTHORIZED)
+          .send("Admin tidak boleh mengupdate pdf legalitas!");
+      }
+      const asset = await this.assetService.updateAsset(req.body, req.params.id);
+      res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
-  }
+  };
 
-  async update(req, res) {
+  delete = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Asset updated",
-      });
+      const asset = await this.assetService.deleteAsset(req.params.id);
+      res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
-  }
+  };
 
-  async delete(req, res) {
+  list = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Asset deleted",
-      });
+      const asset = await this.assetService.listAsset();
+      res.status(asset.statusCode).send(asset.response);
+    } catch (e) {
+      console.log(e);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
+  detailGuest = async (req, res) => {
+    try {
+      let userType = "guest";
+      const asset = await this.assetService.detailAsset(req.params.id, userType);
+      res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
-  }
+  };
 
-  async list(req, res) {
+  detail = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Asset listed",
-      });
+      const asset = await this.assetService.detailAsset(req.params.id, req.user.type);
+      res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
-  }
-
-  async detail(req, res) {
-    try {
-      res.status(httpStatus.OK).json({
-        message: "Asset succesfully get detail",
-      });
-    } catch (e) {
-      res.status(httpStatus.BAD_GATEWAY).send(e);
-    }
-  }
+  };
 }
 
 module.exports = AssetController;
