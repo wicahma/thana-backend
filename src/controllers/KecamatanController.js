@@ -1,13 +1,15 @@
 const httpStatus = require("http-status");
+const KecamatanService = require("../service/KecamatanService");
 
 class KecamatanController {
-  constructor() {}
+  constructor() {
+    this.kecamatanService = new KecamatanService();
+  }
 
   create = async (req, res) => {
     try {
-      res.status(httpStatus.CREATED).json({
-        message: "Kecamatan created",
-      });
+      const newKecamatan = await this.kecamatanService.create(req.body);
+      res.status(newKecamatan.statusCode).send(newKecamatan.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
@@ -15,9 +17,11 @@ class KecamatanController {
 
   update = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Kecamatan updated",
-      });
+      const updatedKecamatan = await this.kecamatanService.update(
+        req.body,
+        req.params.id
+      );
+      res.status(updatedKecamatan.statusCode).send(updatedKecamatan.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
@@ -25,9 +29,10 @@ class KecamatanController {
 
   delete = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Kecamatan deleted",
-      });
+      const deletedKecamatan = await this.kecamatanService.delete(
+        req.params.id
+      );
+      res.status(deletedKecamatan.statusCode).send(deletedKecamatan.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
@@ -35,9 +40,8 @@ class KecamatanController {
 
   list = async (req, res) => {
     try {
-      res.status(httpStatus.OK).json({
-        message: "Kecamatan listed",
-      });
+      const kecamatan = await this.kecamatanService.list();
+      res.status(kecamatan.statusCode).send(kecamatan.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
