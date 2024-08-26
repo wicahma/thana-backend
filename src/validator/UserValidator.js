@@ -9,8 +9,7 @@ class UserValidator {
             email: Joi.string().email().required(),
             password: Joi.string().min(6).required(),
             confirm_password: Joi.string().valid(Joi.ref('password')).required(),
-            first_name: Joi.string(),
-            last_name: Joi.string(),
+            name: Joi.string(),
         });
 
         // schema options
