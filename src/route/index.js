@@ -12,7 +12,7 @@ const defaultRoutes = [
     route: authRoute,
   },
   {
-    path: "/aset",
+    path: "/asset",
     route: assetRoute,
   },
   {
