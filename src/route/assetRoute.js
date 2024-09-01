@@ -7,7 +7,9 @@ const auth = require("../middlewares/auth");
 const assetController = new AssetController();
 const assetValidator = new AssetValidator();
 
-router.get("/list", auth(), assetController.list);
+router.get("/all", auth(), assetController.all);
+router.get("/list", assetController.list);
+router.get("/dashboard", auth(), assetController.dashboardPreview);
 router.get(
   "/detail-guest/:id",
   assetValidator.validateGetByUuid,

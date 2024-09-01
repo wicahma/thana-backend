@@ -13,6 +13,7 @@ class AssetController {
           .status(httpStatus.UNAUTHORIZED)
           .send("Admin tidak boleh mengupload pdf legalitas!");
       }
+      console.log("Data body", req.body.koordinats);
       const asset = await this.assetService.createAsset(req.body);
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
@@ -28,7 +29,10 @@ class AssetController {
           .status(httpStatus.UNAUTHORIZED)
           .send("Admin tidak boleh mengupdate pdf legalitas!");
       }
-      const asset = await this.assetService.updateAsset(req.body, req.params.id);
+      const asset = await this.assetService.updateAsset(
+        req.body,
+        req.params.id
+      );
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
@@ -54,10 +58,23 @@ class AssetController {
     }
   };
 
+  all = async (req, res) => {
+    try {
+      const asset = await this.assetService.allAsset();
+      res.status(asset.statusCode).send(asset.response);
+    } catch (e) {
+      console.log(e);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
   detailGuest = async (req, res) => {
     try {
       let userType = "guest";
-      const asset = await this.assetService.detailAsset(req.params.id, userType);
+      const asset = await this.assetService.detailAsset(
+        req.params.id,
+        userType
+      );
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);
@@ -66,7 +83,19 @@ class AssetController {
 
   detail = async (req, res) => {
     try {
-      const asset = await this.assetService.detailAsset(req.params.id, req.user.type);
+      const asset = await this.assetService.detailAsset(
+        req.params.id,
+        req.user.type
+      );
+      res.status(asset.statusCode).send(asset.response);
+    } catch (e) {
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
+  dashboardPreview = async (req, res) => {
+    try {
+      const asset = await this.assetService.dashboardPreview();
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
       res.status(httpStatus.BAD_GATEWAY).send(e);

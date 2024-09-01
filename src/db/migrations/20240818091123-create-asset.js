@@ -87,9 +87,6 @@ module.exports = {
           "Lainnya"
         ),
       },
-      fungsi: {
-        type: Sequelize.STRING,
-      },
       desa: {
         type: Sequelize.STRING,
       },

@@ -17,10 +17,9 @@ class AssetValidator {
       alamat: Joi.string().required(),
       legalitas: Joi.string()
         .valid("Sertifikat", "Non Sertifikat")
-        .not(null)
-        .required(),
-      tanggal_legalitas: Joi.date().required(),
-      nomor_legalitas: Joi.string().required(),
+        .allow(null, ""),
+      tanggal_legalitas: Joi.date().allow(null, ""),
+      nomor_legalitas: Joi.string().allow(null, ""),
       asal_usul: Joi.string()
         .valid("Beli", "Hibah", "Sewa", "Pinjam", "Pengadaan", "Lainnya")
         .not(null)
@@ -31,7 +30,6 @@ class AssetValidator {
         .valid("Tanah Kosong", "Bangunan", "Jalan", "Drainase", "Lainnya")
         .not(null)
         .required(),
-      fungsi: Joi.string().required(),
       desa: Joi.string().required(),
       kasus: Joi.boolean().required(),
       uraian_kasus: Joi.string()
@@ -51,9 +49,9 @@ class AssetValidator {
         .required(),
       pemanfaatan: Joi.boolean().required(),
       keterangan_lainnya: Joi.string().required(),
-      pdf_legalitas: Joi.any(),
-      foto_1: Joi.string().required(),
-      foto_2: Joi.string().required(),
+      pdf_legalitas: Joi.any().allow(null, ""),
+      foto_1: Joi.string().allow(null, ""),
+      foto_2: Joi.string().allow(null, ""),
       koordinats: Joi.any(),
     });
 
@@ -109,7 +107,6 @@ class AssetValidator {
         .valid("Tanah Kosong", "Bangunan", "Jalan", "Drainase", "Lainnya")
         .not(null)
         .required(),
-      fungsi: Joi.string().required(),
       desa: Joi.string().required(),
       kasus: Joi.boolean().required(),
       uraian_kasus: Joi.string()
