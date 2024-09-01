@@ -4,7 +4,7 @@ const UserDao = require("../dao/UserDao");
 const TokenDao = require("../dao/TokenDao");
 const { tokenTypes } = require("../config/tokens");
 const responseHandler = require("../helper/responseHandler");
-const logger = require('../config/logger');
+const logger = require("../config/logger");
 const RedisService = require("./RedisService");
 
 class AuthService {
@@ -52,30 +52,38 @@ class AuthService {
   };
 
   logout = async (req, res) => {
-    const refreshTokenDoc = await this.tokenDao.findOne({
-      token: req.body.refresh_token,
-      type: tokenTypes.REFRESH,
-      blacklisted: false,
-    });
-    if (!refreshTokenDoc) {
+    try {
+      const refreshTokenDoc = await this.tokenDao.findOne({
+        token: req.body.refresh_token,
+        type: tokenTypes.REFRESH,
+        blacklisted: false,
+      });
+      if (!refreshTokenDoc) {
+        return false;
+      }
+      await this.tokenDao.remove({
+        token: req.body.refresh_token,
+        type: tokenTypes.REFRESH,
+        blacklisted: false,
+      });
+      await this.tokenDao.remove({
+        token: req.body.access_token,
+        type: tokenTypes.ACCESS,
+        blacklisted: false,
+      });
+      await this.redisService.removeToken(
+        req.body.access_token,
+        "access_token"
+      );
+      await this.redisService.removeToken(
+        req.body.refresh_token,
+        "refresh_token"
+      );
+      return true;
+    } catch (e) {
+      // logger.error(e);
       return false;
     }
-    await this.tokenDao.remove({
-      token: req.body.refresh_token,
-      type: tokenTypes.REFRESH,
-      blacklisted: false,
-    });
-    await this.tokenDao.remove({
-      token: req.body.access_token,
-      type: tokenTypes.ACCESS,
-      blacklisted: false,
-    });
-    await this.redisService.removeToken(req.body.access_token, "access_token");
-    await this.redisService.removeToken(
-      req.body.refresh_token,
-      "refresh_token"
-    );
-    return true;
   };
 }
 
