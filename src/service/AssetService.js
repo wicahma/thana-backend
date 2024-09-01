@@ -29,6 +29,20 @@ class AssetService {
     }
   }
 
+  async allAsset() {
+    try {
+      const asset = await this.assetDao.findAllInclude();
+      return returnSuccess(
+        httpStatus.OK,
+        "Semua asset berhasil diambil!",
+        asset
+      );
+    } catch (e) {
+      console.log(e);
+      return returnError(httpStatus.INTERNAL_SERVER_ERROR, e.toString());
+    }
+  }
+
   async updateAsset(body, uuid) {
     try {
       const asset = await this.assetDao.updateByUuid(body, uuid);
@@ -100,6 +114,33 @@ class AssetService {
       }
       return returnSuccess(httpStatus.OK, "Asset berhasil diambil!", asset);
     } catch (e) {
+      return returnError(httpStatus.INTERNAL_SERVER_ERROR, e.toString());
+    }
+  }
+
+  async dashboardPreview() {
+    try {
+      const asalUsul = await this.assetDao.findCountGroupbyAsalUsul();
+      const legalitas = await this.assetDao.findCountGroupbyLegalitas();
+      const kategori = await this.assetDao.findCountGroupbyKategori();
+      const kecamatan = await this.assetDao.findCountGroupbyKecamatan();
+      const all = await this.assetDao.findCountAll();
+      console.log("DATA KECAMATAN++", kecamatan);
+      const kasus = await this.assetDao.findCountGroupbyKasus();
+      return returnSuccess(
+        httpStatus.OK,
+        "Semua asset dashboard berhasil diambil!",
+        {
+          asalUsul,
+          legalitas,
+          kategori,
+          kecamatan,
+          kasus,
+          all,
+        }
+      );
+    } catch (e) {
+      console.log(e);
       return returnError(httpStatus.INTERNAL_SERVER_ERROR, e.toString());
     }
   }

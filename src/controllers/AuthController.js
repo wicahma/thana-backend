@@ -2,7 +2,7 @@ const httpStatus = require("http-status");
 const AuthService = require("../service/AuthService");
 const TokenService = require("../service/TokenService");
 const UserService = require("../service/UserService");
-const logger = require('../config/logger');
+const logger = require("../config/logger");
 const { tokenTypes } = require("../config/tokens");
 
 class AuthController {
@@ -56,6 +56,9 @@ class AuthController {
       if (user.response.status) {
         tokens = await this.tokenService.generateAuthTokens(data);
       }
+      delete data.password;
+      delete data.id;
+      delete data.uuid;
       res.status(user.statusCode).send({ status, code, message, data, tokens });
     } catch (e) {
       logger.error(e);
@@ -65,7 +68,7 @@ class AuthController {
 
   logout = async (req, res) => {
     await this.authService.logout(req, res);
-    res.status(httpStatus.NO_CONTENT).send();
+    res.status(httpStatus.NO_CONTENT).send({ message: "Logout successful!" });
   };
 
   refreshTokens = async (req, res) => {
@@ -82,10 +85,20 @@ class AuthController {
       }
       await this.tokenService.removeTokenById(refreshTokenDoc.id);
       const tokens = await this.tokenService.generateAuthTokens(user);
-      res.send(tokens);
+      delete user.dataValues.password;
+      delete user.dataValues.id;
+      delete user.dataValues.uuid;
+      delete user.dataValues.email_verified;
+      res.send({
+        status: true,
+        data: { user, tokens },
+        message: "Token successfully refreshed, old token blacklisted!",
+      });
     } catch (e) {
       // logger.error(e);
-      res.status(httpStatus.BAD_GATEWAY).send(e);
+      res
+        .status(httpStatus.BAD_GATEWAY)
+        .send({ status: false, message: e.toString() });
     }
   };
 

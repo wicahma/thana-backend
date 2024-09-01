@@ -41,7 +41,6 @@ module.exports = (sequelize, DataTypes) => {
         "Drainase",
         "Lainnya"
       ),
-      fungsi: DataTypes.STRING,
       desa: DataTypes.STRING,
       kasus: DataTypes.BOOLEAN,
       uraian_kasus: DataTypes.ENUM(
