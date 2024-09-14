@@ -1,5 +1,7 @@
 const httpStatus = require("http-status");
 const AssetService = require("../service/AssetService");
+const logger = require("../config/logger");
+const { deleteFile } = require("../middlewares/fileHandler");
 
 class AssetController {
   constructor() {
@@ -9,15 +11,42 @@ class AssetController {
   create = async (req, res) => {
     try {
       if (req.user.type === "admin" && req.body.pdf_legalitas) {
+        deleteFile(req.file.path);
         return res
           .status(httpStatus.UNAUTHORIZED)
           .send("Admin tidak boleh mengupload pdf legalitas!");
       }
-      console.log("Data body", req.body.koordinats);
+      req.body.koordinats = JSON.parse(req.body.koordinats);
+      if (!req.file) {
+        return res
+          .status(httpStatus.BAD_REQUEST)
+          .send("File foto dan dokumen harus diisi!");
+      }
       const asset = await this.assetService.createAsset(req.body);
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
-      console.log(e);
+      logger.error(e);
+      deleteFile(req.file.path);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
+  bulkCreate = async (req, res) => {
+    try {
+      let definedData = req.body.datas;
+
+      req.body.datas.forEach((data, ind) => {
+        Object.keys(data).forEach((key) => {
+          if ([null, undefined, ""].includes(data[key])) {
+            delete definedData[ind][key];
+          }
+        });
+      });
+
+      const asset = await this.assetService.bulkCreateAsset(definedData);
+      res.status(asset.statusCode).send(asset.response);
+    } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -25,16 +54,29 @@ class AssetController {
   update = async (req, res) => {
     try {
       if (req.user.type === "admin" && req.body.pdf_legalitas) {
+        deleteFile(req.file.path);
         return res
           .status(httpStatus.UNAUTHORIZED)
           .send("Admin tidak boleh mengupdate pdf legalitas!");
       }
+      const definedData = { ...req.body };
+
+      Object.keys(definedData).forEach((key) => {
+        if ([null, undefined, ""].includes(definedData[key])) {
+          delete definedData[key];
+        }
+      });
+
+      definedData.koordinats = JSON.parse(req.body.koordinats);
+
       const asset = await this.assetService.updateAsset(
-        req.body,
+        definedData,
         req.params.id
       );
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
+      logger.error(e);
+      deleteFile(req.file.path);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -53,7 +95,17 @@ class AssetController {
       const asset = await this.assetService.listAsset();
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
-      console.log(e);
+      logger.error(e);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
+  listUndone = async (req, res) => {
+    try {
+      const asset = await this.assetService.listAssetUndone();
+      res.status(asset.statusCode).send(asset.response);
+    } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -63,7 +115,7 @@ class AssetController {
       const asset = await this.assetService.allAsset();
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
-      console.log(e);
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -77,6 +129,7 @@ class AssetController {
       );
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -89,6 +142,7 @@ class AssetController {
       );
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -98,6 +152,7 @@ class AssetController {
       const asset = await this.assetService.dashboardPreview();
       res.status(asset.statusCode).send(asset.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };

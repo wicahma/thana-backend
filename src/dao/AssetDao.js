@@ -47,19 +47,52 @@ class AssetDao extends SuperDao {
       include: [
         {
           model: models.kecamatan,
-          required: true,
+          required: false,
           attributes: {
             exclude: ["updatedAt", "createdAt"],
           },
         },
         {
           model: models.skpd,
-          required: true,
+          required: false,
           attributes: {
             exclude: ["updatedAt", "createdAt"],
           },
         },
       ],
+      attributes: {
+        exclude: [
+          "id",
+          "no_kib",
+          "kode_barang",
+          "tanggal_perolehan",
+          "luas",
+          "tanggal_legalitas",
+          "nomor_legalitas",
+          "asal_usul",
+          "harga",
+          "keterangan",
+          "kategori",
+          "uraian",
+          "pemanfaatan",
+          "keterangan_lainnya",
+          "foto_1",
+          "foto_2",
+          "pdf_legalitas",
+        ],
+      },
+    })
+      .then((result) => {
+        return result;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  async findAllExcludeUndone() {
+    return this.Model.findAll({
+      // where: {},
       attributes: {
         exclude: [
           "id",

@@ -29,6 +29,29 @@ class AssetService {
     }
   }
 
+  async bulkCreateAsset(data) {
+    try {
+      const newData = data.map((item) => {
+        const uuid = uuidv4();
+        return { ...item, uuid: uuid };
+      });
+      const asset = await this.assetDao.bulkCreate(newData);
+      if (!asset) {
+        return returnError(
+          httpStatus.INTERNAL_SERVER_ERROR,
+          "Gagal membuat asset!"
+        );
+      }
+      return returnSuccess(
+        httpStatus.CREATED,
+        "Asset berhasil ditambahkan!",
+        asset
+      );
+    } catch (e) {
+      return returnError(httpStatus.INTERNAL_SERVER_ERROR, e);
+    }
+  }
+
   async allAsset() {
     try {
       const asset = await this.assetDao.findAllInclude();
@@ -78,6 +101,20 @@ class AssetService {
   async listAsset() {
     try {
       const asset = await this.assetDao.findAllExclude();
+      return returnSuccess(
+        httpStatus.OK,
+        "Semua asset berhasil diambil!",
+        asset
+      );
+    } catch (e) {
+      console.log(e);
+      return returnError(httpStatus.INTERNAL_SERVER_ERROR, e.toString());
+    }
+  }
+
+  async listAssetUndone() {
+    try {
+      const asset = await this.assetDao.findAllExcludeUndone();
       return returnSuccess(
         httpStatus.OK,
         "Semua asset berhasil diambil!",
