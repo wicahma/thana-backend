@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const config = require("../config/config");
 const ApiError = require("../helper/ApiError");
-// const logger = require('../config/logger');
+const logger = require("../config/logger");
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
@@ -32,7 +32,7 @@ const errorHandler = (err, req, res, next) => {
   };
 
   if (config.env === "development") {
-    // logger.error(err);
+    logger.error(err);
   }
 
   res.status(statusCode).send(response);

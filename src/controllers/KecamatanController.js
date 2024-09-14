@@ -1,5 +1,6 @@
 const httpStatus = require("http-status");
 const KecamatanService = require("../service/KecamatanService");
+const logger = require("../config/logger");
 
 class KecamatanController {
   constructor() {
@@ -11,6 +12,7 @@ class KecamatanController {
       const newKecamatan = await this.kecamatanService.create(req.body);
       res.status(newKecamatan.statusCode).send(newKecamatan.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -23,6 +25,7 @@ class KecamatanController {
       );
       res.status(updatedKecamatan.statusCode).send(updatedKecamatan.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -34,6 +37,7 @@ class KecamatanController {
       );
       res.status(deletedKecamatan.statusCode).send(deletedKecamatan.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -43,6 +47,7 @@ class KecamatanController {
       const kecamatan = await this.kecamatanService.list();
       res.status(kecamatan.statusCode).send(kecamatan.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };

@@ -24,7 +24,7 @@ class AuthController {
       const { message, data } = user.response;
       res.status(user.statusCode).send({ status, message, data, tokens });
     } catch (e) {
-      // logger.error(e);
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -36,7 +36,7 @@ class AuthController {
       );
       res.status(isExists.statusCode).send(isExists.response);
     } catch (e) {
-      // logger.error(e);
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -95,7 +95,7 @@ class AuthController {
         message: "Token successfully refreshed, old token blacklisted!",
       });
     } catch (e) {
-      // logger.error(e);
+      logger.error(e);
       res
         .status(httpStatus.BAD_GATEWAY)
         .send({ status: false, message: e.toString() });
@@ -110,7 +110,7 @@ class AuthController {
       );
       res.status(responseData.statusCode).send(responseData.response);
     } catch (e) {
-      // logger.error(e);
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };

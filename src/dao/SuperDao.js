@@ -1,4 +1,4 @@
-// const logger = require('../config/logger');
+const logger = require("../config/logger");
 
 class SuperDao {
   constructor(model) {
@@ -11,7 +11,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -22,7 +22,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -37,7 +37,7 @@ class SuperDao {
           return result;
         })
         .catch((e) => {
-          // logger.error(e);
+          logger.error(e);
           console.log(e);
         });
     }
@@ -50,7 +50,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -61,7 +61,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -72,7 +72,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -83,7 +83,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -97,7 +97,7 @@ class SuperDao {
           return result;
         })
         .catch((e) => {
-          // logger.error(e);
+          logger.error(e);
           console.log(e);
         });
     } catch (e) {
@@ -131,7 +131,7 @@ class SuperDao {
   }
 
   async deleteByWhere(where) {
-    return this.Model.destroy({ where: where })
+    return this.Model.destroy({ where: where });
   }
 
   async bulkCreate(data) {
@@ -140,7 +140,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e.message);
       });
   }
@@ -151,7 +151,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
       });
   }
@@ -205,7 +205,7 @@ class SuperDao {
         return result;
       })
       .catch((e) => {
-        // logger.error(e);
+        logger.error(e);
         console.log(e);
         return [];
       });

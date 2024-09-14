@@ -1,5 +1,6 @@
 const httpStatus = require("http-status");
 const SkpdService = require("../service/SkpdService");
+const logger = require("../config/logger");
 
 class SkpdController {
   constructor() {
@@ -12,6 +13,7 @@ class SkpdController {
       const newSkpd = await this.skpdService.create(body);
       return res.status(newSkpd.statusCode).send(newSkpd.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -23,6 +25,7 @@ class SkpdController {
       const updatedSkpd = await this.skpdService.update(body, id);
       return res.status(updatedSkpd.statusCode).send(updatedSkpd.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -32,6 +35,7 @@ class SkpdController {
       const deletedSkpd = await this.skpdService.delete(req.params.id);
       return res.status(deletedSkpd.statusCode).send(deletedSkpd.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };
@@ -41,6 +45,7 @@ class SkpdController {
       const allSkpd = await this.skpdService.list();
       return res.status(allSkpd.statusCode).send(allSkpd.response);
     } catch (e) {
+      logger.error(e);
       res.status(httpStatus.BAD_GATEWAY).send(e);
     }
   };

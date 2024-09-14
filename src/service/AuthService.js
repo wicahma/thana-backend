@@ -81,7 +81,7 @@ class AuthService {
       );
       return true;
     } catch (e) {
-      // logger.error(e);
+      logger.error(e);
       return false;
     }
   };
