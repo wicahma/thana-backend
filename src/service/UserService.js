@@ -78,52 +78,57 @@ class UserService {
   };
 
   changePassword = async (data, uuid) => {
-    let message = "Login Successful";
-    let statusCode = httpStatus.OK;
-    let user = await this.userDao.findOneByWhere({ uuid });
+    try {
+      let message = "Login Successful";
+      let statusCode = httpStatus.OK;
+      let user = await this.userDao.findOneByWhere({ uuid });
 
-    if (!user) {
-      return responseHandler.returnError(
-        httpStatus.NOT_FOUND,
-        "User Not found!"
+      if (!user) {
+        return responseHandler.returnError(
+          httpStatus.NOT_FOUND,
+          "User Not found!"
+        );
+      }
+
+      if (data.password !== data.confirm_password) {
+        return responseHandler.returnError(
+          httpStatus.BAD_REQUEST,
+          "Confirm password not matched"
+        );
+      }
+
+      const isPasswordValid = await bcrypt.compare(
+        data.old_password,
+        user.password
       );
-    }
+      user = user.toJSON();
+      delete user.password;
+      if (!isPasswordValid) {
+        statusCode = httpStatus.BAD_REQUEST;
+        message = "Wrong old Password!";
+        return responseHandler.returnError(statusCode, message);
+      }
+      const updateUser = await this.userDao.updateWhere(
+        { password: bcrypt.hashSync(data.password, 8) },
+        { uuid }
+      );
 
-    if (data.password !== data.confirm_password) {
+      if (updateUser) {
+        return responseHandler.returnSuccess(
+          httpStatus.OK,
+          "Password updated Successfully!",
+          {}
+        );
+      }
+
       return responseHandler.returnError(
         httpStatus.BAD_REQUEST,
-        "Confirm password not matched"
+        "Password Update Failed!"
       );
+    } catch (e) {
+      logger.error(e);
+      return responseHandler.returnError(httpStatus.BAD_REQUEST, e.toString());
     }
-
-    const isPasswordValid = await bcrypt.compare(
-      data.old_password,
-      user.password
-    );
-    user = user.toJSON();
-    delete user.password;
-    if (!isPasswordValid) {
-      statusCode = httpStatus.BAD_REQUEST;
-      message = "Wrong old Password!";
-      return responseHandler.returnError(statusCode, message);
-    }
-    const updateUser = await this.userDao.updateWhere(
-      { password: bcrypt.hashSync(data.password, 8) },
-      { uuid }
-    );
-
-    if (updateUser) {
-      return responseHandler.returnSuccess(
-        httpStatus.OK,
-        "Password updated Successfully!",
-        {}
-      );
-    }
-
-    return responseHandler.returnError(
-      httpStatus.BAD_REQUEST,
-      "Password Update Failed!"
-    );
   };
 }
 

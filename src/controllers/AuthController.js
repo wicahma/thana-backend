@@ -55,14 +55,18 @@ class AuthController {
       let tokens = {};
       if (user.response.status) {
         tokens = await this.tokenService.generateAuthTokens(data);
+        delete data.password;
+        delete data.id;
+        delete data.uuid;
       }
-      delete data.password;
-      delete data.id;
-      delete data.uuid;
       res.status(user.statusCode).send({ status, code, message, data, tokens });
     } catch (e) {
       logger.error(e);
-      res.status(httpStatus.BAD_GATEWAY).send(e);
+      if (e.message) {
+        res.status(httpStatus.BAD_GATEWAY).send(e);
+        return;
+      }
+      res.status(httpStatus.BAD_GATEWAY).send({ status: false, message: e });
     }
   };
 
@@ -80,8 +84,10 @@ class AuthController {
       const user = await this.userService.getUserByUuid(
         refreshTokenDoc.user_uuid
       );
-      if (user == null) {
-        res.status(httpStatus.BAD_GATEWAY).send("User Not Found!");
+      if (user === null) {
+        res
+          .status(httpStatus.BAD_GATEWAY)
+          .send({ status: false, message: "User Not Found!" });
       }
       await this.tokenService.removeTokenById(refreshTokenDoc.id);
       const tokens = await this.tokenService.generateAuthTokens(user);
@@ -111,7 +117,7 @@ class AuthController {
       res.status(responseData.statusCode).send(responseData.response);
     } catch (e) {
       logger.error(e);
-      res.status(httpStatus.BAD_GATEWAY).send(e);
+      res.status(httpStatus.BAD_GATEWAY).send({ status: false, message: e });
     }
   };
 }
