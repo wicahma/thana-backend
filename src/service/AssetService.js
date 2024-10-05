@@ -2,10 +2,20 @@ const { returnError, returnSuccess } = require("../helper/responseHandler");
 const httpStatus = require("http-status");
 const AssetDao = require("../dao/AssetDao");
 const { v4: uuidv4 } = require("uuid");
+const { deleteFile } = require("../middlewares/fileHandler");
 
 class AssetService {
   constructor() {
     this.assetDao = new AssetDao();
+  }
+
+  async searchAsset(query) {
+    try {
+      const asset = await this.assetDao.searchAsset(query);
+      return returnSuccess(httpStatus.OK, "Asset berhasil diambil!", asset);
+    } catch (e) {
+      return returnError(httpStatus.INTERNAL_SERVER_ERROR, e.toString());
+    }
   }
 
   async createAsset(body) {
@@ -14,6 +24,9 @@ class AssetService {
 
       const asset = await this.assetDao.create({ ...body, uuid });
       if (!asset) {
+        deleteFile(body.foto_1);
+        deleteFile(body.foto_2);
+        deleteFile(body.pdf_legalitas);
         return returnError(
           httpStatus.INTERNAL_SERVER_ERROR,
           "Gagal membuat asset!"
@@ -25,6 +38,9 @@ class AssetService {
         asset
       );
     } catch (e) {
+      deleteFile(body.foto_1);
+      deleteFile(body.foto_2);
+      deleteFile(body.pdf_legalitas);
       return returnError(httpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }

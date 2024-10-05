@@ -23,6 +23,7 @@ router.get(
   assetValidator.validateGetByUuid,
   assetController.detail
 );
+router.get("/search", assetController.search);
 router.post(
   "/create",
   auth(),

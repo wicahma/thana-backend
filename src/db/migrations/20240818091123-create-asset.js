@@ -38,12 +38,6 @@ module.exports = {
       no_kib: {
         type: Sequelize.STRING,
       },
-      kode_barang: {
-        type: Sequelize.STRING,
-      },
-      uraian: {
-        type: Sequelize.STRING,
-      },
       tanggal_perolehan: {
         type: Sequelize.DATE,
       },
@@ -64,19 +58,15 @@ module.exports = {
       },
       asal_usul: {
         type: Sequelize.ENUM(
-          "Beli",
+          "Pembelian",
           "Hibah",
           "Sewa",
           "Pinjam",
-          "Pengadaan",
           "Lainnya"
         ),
       },
       harga: {
         type: Sequelize.INTEGER,
-      },
-      keterangan: {
-        type: Sequelize.STRING,
       },
       kategori: {
         type: Sequelize.ENUM(
@@ -110,7 +100,7 @@ module.exports = {
       pemanfaatan: {
         type: Sequelize.BOOLEAN,
       },
-      keterangan_lainnya: {
+      jenis_kategori: {
         type: Sequelize.STRING,
       },
       pdf_legalitas: {

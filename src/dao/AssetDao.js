@@ -1,11 +1,82 @@
 const SuperDao = require("./SuperDao");
 const models = require("../models");
+const { Op } = require("sequelize");
 
 const Asset = models.asset;
 
 class AssetDao extends SuperDao {
   constructor() {
     super(Asset);
+  }
+
+  async searchAsset(query) {
+    return this.Model.findAll({
+      where: {
+        [Op.or]: [
+          {
+            penggunaan: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+          {
+            no_kib: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+          {
+            alamat: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+          {
+            nomor_legalitas: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+          {
+            desa: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+          {
+            jenis_kategori: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+        ],
+      },
+      attributes: {
+        exclude: [
+          ,
+          "createdAt",
+          "foto_1",
+          "foto_2",
+          "harga",
+          "id",
+          "jenis_kategori",
+          "kasus",
+          "kategori",
+          "kecamatan_id",
+          "skpd_id",
+          "pemanfaatan",
+          "legalitas",
+          "luas",
+          "no_kib",
+          "nomor_legalitas",
+          "pdf_legalitas",
+          "updatedAt",
+          "tanggal_legalitas",
+          "tanggal_perolehan",
+          "uraian_kasus",
+        ],
+      },
+    })
+      .then((result) => {
+        return result;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   async findAllInclude() {

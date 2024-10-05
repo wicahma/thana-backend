@@ -10,45 +10,20 @@ class AssetValidator {
       kecamatan_id: Joi.number().allow(null, ""),
       penggunaan: Joi.string().required(),
       no_kib: Joi.string().required(),
-      kode_barang: Joi.string().required(),
-      uraian: Joi.string().allow(null, ""),
-      tanggal_perolehan: Joi.date().allow(null, ""),
+      tanggal_perolehan: Joi.string().allow(null, ""),
       luas: Joi.number().allow(null, ""),
       alamat: Joi.string().allow(null, ""),
-      legalitas: Joi.string()
-        .valid("Sertifikat", "Non Sertifikat")
-        .allow(null, ""),
-      tanggal_legalitas: Joi.date().allow(null, ""),
+      legalitas: Joi.string().allow(null, ""),
+      tanggal_legalitas: Joi.string().allow(null, ""),
       nomor_legalitas: Joi.string().allow(null, ""),
-      asal_usul: Joi.string()
-        .valid("Beli", "Hibah", "Sewa", "Pinjam", "Pengadaan", "Lainnya")
-        .allow(null, ""),
+      asal_usul: Joi.string().allow(null, ""),
       harga: Joi.number().allow(null, ""),
-      keterangan: Joi.string().allow(null, ""),
-      kategori: Joi.string()
-        .valid("Tanah Kosong", "Bangunan", "Jalan", "Drainase", "Lainnya")
-        .allow(null, ""),
+      kategori: Joi.string().allow(null, ""),
       desa: Joi.string().allow(null, ""),
       kasus: Joi.boolean().allow(null, ""),
-      uraian_kasus: Joi.string()
-        .valid(
-          "Nihil",
-          "Sengketa Masyarakat",
-          "Sengketa Perusahaan",
-          "Objek Tanah Tidak Jelas",
-          "Kawasan Hutan",
-          "Belum Balik Nama",
-          "Proses Sertifikasi",
-          "Pemanfaatan Tidak Sesuai RTRWK",
-          "Bukti Hak Tidak Lengkap",
-          "Data Awal belum sesuai kondisi Riil"
-        )
-        .allow(null, ""),
+      uraian_kasus: Joi.string().allow(null, ""),
       pemanfaatan: Joi.boolean().allow(null, ""),
-      keterangan_lainnya: Joi.string().allow(null, ""),
-      pdf_legalitas: Joi.any().allow(null, ""),
-      foto_1: Joi.string().allow(null, ""),
-      foto_2: Joi.string().allow(null, ""),
+      jenis_kategori: Joi.string().allow(null, ""),
       koordinats: Joi.any(),
     });
 
@@ -98,7 +73,7 @@ class AssetValidator {
         coordinates: Joi.array().min(1).required(),
       }),
     });
-    
+
     const schemas = Joi.object({
       datas: Joi.array()
         .min(1)
@@ -107,18 +82,9 @@ class AssetValidator {
     });
 
     let newData = req.body;
-    if (req.user.type === "admin" && req.body.pdf_legalitas) {
-      newData.datas = req.body.datas.map((data) => {
-        delete data.pdf_legalitas;
-        delete data.legalitas;
-        delete data.tanggal_legalitas;
-        delete data.nomor_legalitas;
-        return data;
-      });
-    }
 
     const options = {
-      abortEarly: false,
+      abortEarly: true,
       allowUnknown: false,
       stripUnknown: true,
     };
@@ -144,8 +110,6 @@ class AssetValidator {
       kecamatan_id: Joi.number().required(),
       penggunaan: Joi.string().required(),
       no_kib: Joi.string().required(),
-      kode_barang: Joi.string().required(),
-      uraian: Joi.string().required(),
       tanggal_perolehan: Joi.date().required(),
       luas: Joi.number().required(),
       alamat: Joi.string().required(),
@@ -155,11 +119,10 @@ class AssetValidator {
       tanggal_legalitas: Joi.date().allow(null, ""),
       nomor_legalitas: Joi.string().allow(null, ""),
       asal_usul: Joi.string()
-        .valid("Beli", "Hibah", "Sewa", "Pinjam", "Pengadaan", "Lainnya")
+        .valid("Pembelian", "Hibah", "Sewa", "Pinjam", "Lainnya")
         .not(null)
         .required(),
       harga: Joi.number().required(),
-      keterangan: Joi.string().required(),
       kategori: Joi.string()
         .valid("Tanah Kosong", "Bangunan", "Jalan", "Drainase", "Lainnya")
         .not(null)
@@ -182,19 +145,9 @@ class AssetValidator {
         .not(null)
         .required(),
       pemanfaatan: Joi.boolean().required(),
-      keterangan_lainnya: Joi.string().required(),
-      pdf_legalitas: Joi.any().allow(null, ""),
-      foto_1: Joi.string().allow(null, ""),
-      foto_2: Joi.string().allow(null, ""),
+      jenis_kategori: Joi.string().required(),
       koordinats: Joi.any(),
     });
-
-    if (req.user.type === "admin" && req.body.pdf_legalitas) {
-      delete req.body.pdf_legalitas;
-      delete req.body.legalitas;
-      delete req.body.tanggal_legalitas;
-      delete req.body.nomor_legalitas;
-    }
 
     const options = {
       abortEarly: false,
@@ -224,8 +177,6 @@ class AssetValidator {
       kecamatan_id: Joi.number().required(),
       penggunaan: Joi.string().required(),
       no_kib: Joi.string().required(),
-      kode_barang: Joi.string().required(),
-      uraian: Joi.string().required(),
       tanggal_perolehan: Joi.date().required(),
       luas: Joi.number().required(),
       alamat: Joi.string().required(),
@@ -247,7 +198,6 @@ class AssetValidator {
         .not(null)
         .required(),
       harga: Joi.number().required(),
-      keterangan: Joi.string().required(),
       kategori: Joi.string()
         .valid("Tanah Kosong", "Bangunan", "Jalan", "Drainase", "Lainnya")
         .not(null)
@@ -270,7 +220,7 @@ class AssetValidator {
         .not(null)
         .required(),
       pemanfaatan: Joi.boolean().required(),
-      keterangan_lainnya: Joi.string().required(),
+      jenis_kategori: Joi.string().required(),
       foto_1: Joi.string().allow(null, ""),
       foto_2: Joi.string().allow(null, ""),
       koordinats: Joi.any(),
@@ -279,13 +229,6 @@ class AssetValidator {
     const params = Joi.object({
       id: Joi.string().required(),
     });
-
-    if (req.user.type === "admin" && req.body.pdf_legalitas) {
-      delete req.body.pdf_legalitas;
-      delete req.body.legalitas;
-      delete req.body.tanggal_legalitas;
-      delete req.body.nomor_legalitas;
-    }
 
     const options = {
       abortEarly: false,

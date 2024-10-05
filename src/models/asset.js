@@ -16,8 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       uuid: DataTypes.UUID,
       penggunaan: DataTypes.STRING,
       no_kib: DataTypes.STRING,
-      kode_barang: DataTypes.STRING,
-      uraian: DataTypes.STRING,
       tanggal_perolehan: DataTypes.DATE,
       luas: DataTypes.NUMBER,
       alamat: DataTypes.STRING,
@@ -25,15 +23,13 @@ module.exports = (sequelize, DataTypes) => {
       tanggal_legalitas: DataTypes.DATE,
       nomor_legalitas: DataTypes.STRING,
       asal_usul: DataTypes.ENUM(
-        "Beli",
+        "Pembelian",
         "Hibah",
         "Sewa",
         "Pinjam",
-        "Pengadaan",
         "Lainnya"
       ),
       harga: DataTypes.NUMBER,
-      keterangan: DataTypes.STRING,
       kategori: DataTypes.ENUM(
         "Tanah Kosong",
         "Bangunan",
@@ -56,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         "Data Awal belum sesuai kondisi Riil"
       ),
       pemanfaatan: DataTypes.BOOLEAN,
-      keterangan_lainnya: DataTypes.STRING,
+      jenis_kategori: DataTypes.STRING,
       pdf_legalitas: DataTypes.STRING,
       foto_1: DataTypes.STRING,
       foto_2: DataTypes.STRING,
