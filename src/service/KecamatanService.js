@@ -26,6 +26,25 @@ class KecamatanService {
     }
   };
 
+  bulkCreate = async (data) => {
+    try {
+      const kecamatan = await this.kecamatanDao.bulkCreate(data);
+      if (!kecamatan) {
+        return returnError(
+          httpStatus.INTERNAL_SERVER_ERROR,
+          "Gagal membuat kecamatan!"
+        );
+      }
+      return returnSuccess(
+        httpStatus.CREATED,
+        "Kecamatan berhasil ditambahkan!",
+        kecamatan
+      );
+    } catch (e) {
+      return returnError(httpStatus.INTERNAL_SERVER_ERROR, e);
+    }
+  };
+
   update = async (nama, id) => {
     try {
       const kecamatan = await this.kecamatanDao.updateById(nama, id);

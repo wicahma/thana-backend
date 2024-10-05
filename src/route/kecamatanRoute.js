@@ -7,9 +7,30 @@ const auth = require("../middlewares/auth");
 const kecamatanController = new KecamatanController();
 const kecamatanValidator = new KecamatanValidator();
 
-router.post("/create", auth(), kecamatanValidator.validateCreate, kecamatanController.create);
+router.post(
+  "/create",
+  auth(),
+  kecamatanValidator.validateCreate,
+  kecamatanController.create
+);
+router.post(
+  "/bulk-create",
+  auth(),
+  kecamatanValidator.validateBulkCreate,
+  kecamatanController.bulkCreate
+);
 router.get("/list", auth(), kecamatanController.list);
-router.put("/update/:id", auth(), kecamatanValidator.validateUpdate, kecamatanController.update);
-router.delete("/delete/:id", auth(), kecamatanValidator.validateDelete, kecamatanController.delete);
+router.put(
+  "/update/:id",
+  auth(),
+  kecamatanValidator.validateUpdate,
+  kecamatanController.update
+);
+router.delete(
+  "/delete/:id",
+  auth(),
+  kecamatanValidator.validateDelete,
+  kecamatanController.delete
+);
 
 module.exports = router;

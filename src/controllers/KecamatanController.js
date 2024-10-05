@@ -7,6 +7,18 @@ class KecamatanController {
     this.kecamatanService = new KecamatanService();
   }
 
+  bulkCreate = async (req, res) => {
+    try {
+      const kecamatan = await this.kecamatanService.bulkCreate(
+        req.body.kecamatan
+      );
+      res.status(kecamatan.statusCode).send(kecamatan.response);
+    } catch (e) {
+      logger.error(e);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
   create = async (req, res) => {
     try {
       const newKecamatan = await this.kecamatanService.create(req.body);

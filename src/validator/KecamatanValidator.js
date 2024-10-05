@@ -29,13 +29,43 @@ class KecamatanValidator {
     }
   }
 
+  async validateBulkCreate(req, res, next) {
+    const schema = Joi.object({
+      kecamatan: Joi.array().items(
+        Joi.object({
+          nama: Joi.string().required(),
+        })
+      ),
+    });
+
+    const options = {
+      abortEarly: true,
+      allowUnknown: false,
+      stripUnknown: true,
+    };
+
+    const { error, value } = schema.validate(req.body, options);
+
+    if (error) {
+      const errorMessage = error.details
+        .map((details) => {
+          return details.message;
+        })
+        .join(", ");
+      next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
+    } else {
+      req.body = value;
+      return next();
+    }
+  }
+
   async validateUpdate(req, res, next) {
     const schema = Joi.object({
       nama: Joi.string().required(),
     });
 
     const params = Joi.object({
-      id: Joi.number().required(),
+      id: Joi.string().required(),
     });
 
     const options = {
@@ -72,7 +102,7 @@ class KecamatanValidator {
 
   async validateDelete(req, res, next) {
     const schema = Joi.object({
-      id: Joi.number().required(),
+      id: Joi.string().required(),
     });
 
     const options = {
