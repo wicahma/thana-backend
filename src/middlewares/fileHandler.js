@@ -14,6 +14,11 @@ const fileHandler = multer({
           fs.mkdirSync(`${__dirname}/../../public/docs`, { recursive: true });
         }
         cb(null, `${__dirname}/../../public/docs`);
+      } else {
+        if (!fs.existsSync(`${__dirname}/../../public/others`)) {
+          fs.mkdirSync(`${__dirname}/../../public/others`, { recursive: true });
+        }
+        cb(null, `${__dirname}/../../public/others`);
       }
     },
     filename: (req, file, cb) => {
@@ -21,7 +26,10 @@ const fileHandler = multer({
     },
   }),
   fileFilter: (req, file, cb) => {
+    console.log(file.mimetype);
     if (
+      file.mimetype.includes("kml") ||
+      file.mimetype.includes("xml") ||
       file.mimetype.includes("image") ||
       file.mimetype.includes("msword") ||
       file.mimetype.includes("pdf") ||
@@ -42,8 +50,7 @@ const fileHandler = multer({
 });
 
 const deleteFile = (filePath) => {
-  if (!fs.existsSync(filePath))
-    return "Image File not found, but data was deleted!";
+  if (!fs.existsSync(filePath)) return "File not found, no file deleted!";
   fs.unlink(filePath, (err) => {
     if (err) {
       console.log(err);
