@@ -3,6 +3,7 @@ const authRoute = require("./authRoute");
 const assetRoute = require("./assetRoute");
 const kecamatanRoute = require("./kecamatanRoute");
 const skpdRoute = require("./skpdRoute");
+const mapRoute = require("./mapRoute");
 
 const router = express.Router();
 
@@ -22,6 +23,10 @@ const defaultRoutes = [
   {
     path: "/skpd",
     route: skpdRoute,
+  },
+  {
+    path: "/layers",
+    route: mapRoute,
   },
 ];
 
