@@ -8,6 +8,7 @@ const skpdController = new SkpdController();
 const skpdValidator = new SkpdValidator();
 
 router.post("/create", auth(), skpdValidator.validateCreate, skpdController.create);
+router.post("/bulk-create", auth(), skpdValidator.validateBulkCreate, skpdController.bulkCreate);
 router.get("/list", auth(), skpdController.list);
 router.put("/update/:id", auth(),skpdValidator.validateUpdate, skpdController.update);
 router.delete("/delete/:id", auth(), skpdController.delete);

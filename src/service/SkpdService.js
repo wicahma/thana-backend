@@ -7,6 +7,25 @@ class SkpdService {
     this.skpdDao = new SkpdDao();
   }
 
+  bulkCreate = async (body) => {
+    try {
+      const skpd = await this.skpdDao.bulkCreate(body);
+      if (!skpd) {
+        return responseHandler.returnError(
+          httpStatus.INTERNAL_SERVER_ERROR,
+          "Gagal membuat SKPD!"
+        );
+      }
+      return responseHandler.returnSuccess(
+        httpStatus.CREATED,
+        "SKPD berhasil ditambahkan!",
+        skpd
+      );
+    } catch (e) {
+      return responseHandler.returnError(httpStatus.INTERNAL_SERVER_ERROR, e);
+    }
+  };
+
   create = async (body) => {
     try {
       const skpd = await this.skpdDao.create(body);

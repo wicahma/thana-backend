@@ -18,6 +18,17 @@ class SkpdController {
     }
   };
 
+  bulkCreate = async (req, res) => {
+    try {
+      const { body } = req;
+      const newSkpd = await this.skpdService.bulkCreate(body.skpd);
+      return res.status(newSkpd.statusCode).send(newSkpd.response);
+    } catch (e) {
+      logger.error(e);
+      res.status(httpStatus.BAD_GATEWAY).send(e);
+    }
+  };
+
   update = async (req, res) => {
     try {
       const { body } = req;
